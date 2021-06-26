@@ -1,6 +1,8 @@
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
 
 
 public class EmployeeWageBuilder implements EmployeeWageInterface {
@@ -10,6 +12,9 @@ public class EmployeeWageBuilder implements EmployeeWageInterface {
 	private static final int ABSENT = 0;
 	private static final int FULL_TIME = 1;
 	private static final int PART_TIME = 2;
+
+	private int numOfCompany = 0;
+	private CompanyEmpWage[] companyEmpWageArray;
 
 	private ArrayList<CompanyEmpWage> companyEmpWageArrayList;
 	private Map<String, CompanyEmpWage> companyEmpWageMap;
@@ -23,15 +28,24 @@ public class EmployeeWageBuilder implements EmployeeWageInterface {
 	private CompanyEmpWage[] companyEmpWageArray;
 	private ArrayList<CompanyEmpWage> companyEmpWageArrayList;
 
+
 	// created array of type CompanyEmpWage
 	public EmployeeWageBuilder() {
 		companyEmpWageArray = new CompanyEmpWage[5];
+
 		companyEmpWageArrayList = new ArrayList<>();
+
 
 	}
 
 	@Override
 	public void addCompanyEmpWage(String companyName, int wagePerHour, int numberOfWorkingDays, int maxWorkingHours) {
+
+		companyEmpWageArray[numOfCompany] = new CompanyEmpWage(companyName, wagePerHour, numberOfWorkingDays,
+				maxWorkingHours);
+
+		numOfCompany++;
+
 		CompanyEmpWage companyEmpWage = new CompanyEmpWage(companyName, wagePerHour, numberOfWorkingDays,
 				maxWorkingHours);
 
@@ -40,10 +54,16 @@ public class EmployeeWageBuilder implements EmployeeWageInterface {
 
 	@Override
 	public void computeEmpWage() {
+
+		for (int i = 0; i < numOfCompany; i++) {
+			companyEmpWageArray[i].setTotalEmpWage(this.computeEmpWage(companyEmpWageArray[i]));
+			System.out.println(companyEmpWageArray[i]);
+
 		for (int i = 0; i < companyEmpWageArrayList.size(); i++) {
 			CompanyEmpWage companyEmpWage = companyEmpWageArrayList.get(i);
 			companyEmpWage.setTotalEmpWage(this.computeEmpWage(companyEmpWage));
 			System.out.println(companyEmpWage);
+
 		}
 	}
 
@@ -119,8 +139,6 @@ public class EmployeeWageBuilder implements EmployeeWageInterface {
 		return companyEmpWageMap.get(companyName).totalEmpWage;
 	}
 
-=======
-
 	// main method
 	public static void main(String[] args) {
 
@@ -129,7 +147,7 @@ public class EmployeeWageBuilder implements EmployeeWageInterface {
 		employeeWageBuilder.addCompanyEmpWage("D-MART", 20, 20, 100);
 		System.out.println();
 		employeeWageBuilder.addCompanyEmpWage("Reliance Retail", 10, 30, 200);
-
+    
 		System.out.println();
 		employeeWageBuilder.addCompanyEmpWage("Vijay Stores", 15, 25, 150);
 		employeeWageBuilder.computeEmpWage();
@@ -195,3 +213,4 @@ interface EmployeeWageInterface {
 	int getTotalEmpWage(String companyName);
 
 }
+
